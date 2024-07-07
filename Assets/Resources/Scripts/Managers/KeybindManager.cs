@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class KeybindManager : MonoBehaviour
@@ -22,7 +21,7 @@ public class KeybindManager : MonoBehaviour
     }
 
     #endregion
-    //*
+    
     public bool KeyDown(string key)
     {
         if (Input.GetKeyDown(keybinding.GetKey(key)))
@@ -37,7 +36,7 @@ public class KeybindManager : MonoBehaviour
         else
             return false;
     }
-    //*/
+
     // See PlayerController
     public float GetAxisRaw(string axisName)
     {

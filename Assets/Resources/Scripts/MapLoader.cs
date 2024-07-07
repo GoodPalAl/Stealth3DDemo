@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Al A.
+ * Summer 2020 (c)
+ */
 using System.IO;
-using System.Linq;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Script that will load a json file into Unity as a map.
+/// Very broken.
+/// </summary>
 [Serializable]
 public class MapLoader : MonoBehaviour
 {
@@ -14,7 +19,6 @@ public class MapLoader : MonoBehaviour
 
     // Array of map objects
     private MapObjectCollection mapObjectCollection;
-    //private static GameObject _player;
 
     [ContextMenu("Load Map from File")]
     private void LoadMap()
@@ -114,8 +118,6 @@ public class MapLoader : MonoBehaviour
 public class MapObjectCollection
 {
     public MapObject[] mapObjects;
-    //public GameObject player;
-    //public Transform floor;
 }
 
 [Serializable]

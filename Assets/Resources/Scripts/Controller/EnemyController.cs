@@ -1,27 +1,43 @@
-﻿using UnityEngine;
+﻿/*
+ * Al A.
+ * Summer 2020 (c)
+ */
+using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Audio;
 
-// Control the behavior of enemies
+/// <summary>
+/// Control the behavior of enemies.
+/// </summary>
 public class EnemyController : MonoBehaviour
 {
-    // Reference Unity objects
-    public Transform playerUI;  // Scene UI use since target is defined in Start()
-
-    // Unity objects defined when game starts
-    Transform target;           // Game use
+    // COMPONENTS
+    // Scene UI use since target is defined in Start()
+    public Transform playerUI;
+    /// <summary>
+    /// Unity objects defined when game starts.
+    /// </summary>
+    Transform target;
     NavMeshAgent NMAgent;
 
-    // Variables for gizmo drawing
+    // VARIABLES
+    // for gizmo drawing
+    /// <summary>
+    /// Maximum distance the enemy can see.
+    /// Radius of FOV.
+    /// </summary>
     [SerializeField]
     float viewRadiusMax = 10f;
+    /// <summary>
+    /// Angle between enemy's facing direction to where the FOV should end.
+    /// </summary>
     [SerializeField]
     float FOVAngleMax = 60f;
-
     // Enemy FOV use
-    float heightMultiplayer = 1.0f;
+    readonly float heightMultiplayer = 1.0f;
+    /// <summary>
+    /// Refers to if the player's position is within the FOV of enemy, NOT if the enemy sees the player.
+    /// </summary>
     bool isInFOV;
 
     // Enemy Behavior use
@@ -30,48 +46,101 @@ public class EnemyController : MonoBehaviour
         Patrol,
         Stationary
     }
+    /// <summary>
+    /// Defines the behavior of the current instance of this enemy.
+    /// </summary>
     [SerializeField]
     enemyBehaviorType enemyBehavior = enemyBehaviorType.Stationary;
 
-    // Patrol use
+    // PATROL BEHAVIOR USE
+    /// <summary>
+    /// A list of Waypoints that this enemy will travel to.
+    /// </summary>
     [SerializeField]
     List<Waypoints> patrolPoints = new List<Waypoints>();
+    /// <summary>
+    /// Current waypoint the enemy is travelling to.
+    /// </summary>
     int curPatrolIndex;
 
-    // Stationary use
+    // STATIONARY BEHAVIOR USE
+    /// <summary>
+    /// Time in seconds the enemy will look in one direction for.
+    /// </summary>
     [SerializeField]
     float totalLookTime = 5f;
+    /// <summary>
+    /// State where the enemy is looking in one direction, i.e. NOT turning to look in another direction.
+    /// </summary>
     bool looking = true;
+    /// <summary>
+    /// State where the enemy is turning to look in another direction.
+    /// </summary>
     bool turning;
+    /// <summary>
+    /// Timer to monitor how long the enemy is in the "looking" state.
+    /// </summary>
     float lookTimer = 0f;
+
+    /// <summary>
+    /// Compass directions in Unity. 
+    /// North = +z, East = +x, South = -z, West = -x.
+    /// </summary>
     enum compassDir
     {
+        /// <summary>
+        /// +z-axis
+        /// </summary>
         North,
-        East, 
+        /// <summary>
+        /// +x-axis
+        /// </summary>
+        East,
+        /// <summary>
+        /// -z-axis
+        /// </summary>
         South,
+        /// <summary>
+        /// -x-axis
+        /// </summary>
         West
     }
+    /// <summary>
+    /// Initial starting direction of enemy.
+    /// </summary>
     [SerializeField]
     compassDir startDirection = compassDir.North;
+    /// <summary>
+    /// Current direction the enemy is facing.
+    /// </summary>
     int curDirectionIndex;
-    Vector3[] compass = 
+    /// <summary>
+    /// Compass directions as vectors.
+    /// Variables have same indexes as compassDir
+    /// </summary>
+    readonly Vector3[] compass = 
     {
-        new Vector3(0, 0, 90f),    // North
-        new Vector3(90f, 0, 0),    // East
-        new Vector3(0, 0, -90f),   // South
-        new Vector3(-90f, 0, 0)    // West
+        new(0, 0, 90f),    // North
+        new(90f, 0, 0),    // East
+        new(0, 0, -90f),   // South
+        new(-90f, 0, 0)    // West
     };
 
     // FOV visualization use
+    /// <summary>
+    /// Resolution of MeshFilter
+    /// </summary>
     public float meshResolution;
+    /// <summary>
+    /// Mesh Filter of enemy FOV
+    /// </summary>
     public MeshFilter viewMeshFilter;
+    /// <summary>
+    /// Visual Mesh of Enemy FOV.
+    /// </summary>
     Mesh viewMesh;
 
-    // Footstep use
-    //[SerializeField]
-    //AudioMixer audioMixer;
-    //[SerializeField]
-    //AudioClip triggerSound;
+    // Footsteps use
     AudioSource AS;
 
     void Start()
@@ -145,30 +214,36 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // Called once per frame.
+    // LateUpdate is called after Update.
     private void LateUpdate()
     {
         DrawFOV();
     }
 
+    // Called ince oer frame.
+    // FixedUpdate should be used for physics.
     void FixedUpdate()
     {
-        // Distance between the player and the enemy
+        // Distance between the player and the enemy.
         float distance = Vector3.Distance(target.position, transform.position);
+        // Sets if the player is currently within sight of the enemy.
         isInFOV = inFOV(transform, target, FOVAngleMax, viewRadiusMax);
         
         // Player enters enemy line-of-sight
         if (isInFOV)
         {
-            //PlayerManager.instance.setHideStatus(false);
+            // Add this enemy to the list of enemies that have currently spotted the player.
             PlayerManager.instance.enemySpotsPlayer(this.gameObject);
         }
+
         // Test if player is hidden
         if (!PlayerManager.instance.getHideStatus() && PlayerManager.instance.isEnemyFollowingPlayer(this.gameObject))
         {
             //Debug.Log("Chasing...");
             NMAgent.SetDestination(target.position);
 
-            // If the enemy gets close to the player
+            // If the enemy gets close to the player...
             if (distance <= NMAgent.stoppingDistance)
             {
                 FaceTarget();
@@ -176,10 +251,11 @@ public class EnemyController : MonoBehaviour
                 // Update player losing status
                 GameManager.instance.setLossStatus(true);
             }
+
             // Player must escape viewing radius to become undetected again
             if (distance > viewRadiusMax)
             {
-                //PlayerManager.instance.setHideStatus(true);
+                // Remove this enemy from the list of enemies that have currently spotted the player.
                 PlayerManager.instance.enemyLosesPlayer(this.gameObject);
             }
         }
@@ -189,10 +265,17 @@ public class EnemyController : MonoBehaviour
             DefaultBehavior();
         }
 
+        // If enemy is moving, play footstep sound.
+        // FIXME: does not work
+        /*
         if (NMAgent.velocity.magnitude > .1)
             PlayFootsteps();
+        //*/
     }
 
+    /// <summary>
+    /// Tells enemy how to behave by default.
+    /// </summary>
     void DefaultBehavior()
     {
         switch (enemyBehavior)
@@ -213,18 +296,25 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays footstep noise. FIXME: BROKEN.
+    /// </summary>
     void PlayFootsteps()
     {
         AS.Play();
     }
 
+    /// <summary>
+    /// Tells a "stationary" enemy how to behave.
+    /// Go to a specified waypoint and stay there. Rotate along y-axis at waypoint, chase player if spotted. Return to waypoint if player escapes.
+    /// </summary>
     void DefaultBehaviorStationary()
     {
         float distance = Vector3.Distance(patrolPoints[curPatrolIndex].transform.position, transform.position);
         Quaternion look = Quaternion.LookRotation(new Vector3(compass[curDirectionIndex].x, 0f, compass[curDirectionIndex].z));
         float angle = Quaternion.Angle(transform.rotation, look);
 
-        // When enemy returns to position, start looking around
+        // When enemy returns to position, start looking around.
         if (distance <= 2f)
         {
             if (looking)
@@ -250,11 +340,17 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the current direction that the enemy is facing.
+    /// </summary>
     void SetDirection()
     {
         curDirectionIndex = (++curDirectionIndex) % compass.Length;
     }
 
+    /// <summary>
+    /// Triggers the enemy to look in the next direction.
+    /// </summary>
     void FaceDirection()
     {
         // Different method of rotation since enemies use NavMesh while player uses input.
@@ -268,6 +364,10 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
+    /// <summary>
+    /// Tells a "patrol" enemy how to behave.
+    /// Travel to each specified waypoint on a loop. Chase player if spotted, return to current waypoint if player escapes.
+    /// </summary>
     void DefaultBehaviorPatrol()
     {
         // Distance from enemy's current position to the next point its travelling to
@@ -298,7 +398,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // Turn enemy to face the target if target is too close to move towards
+    /// <summary>
+    /// Turn enemy to face the target if target is too close to move towards
+    /// </summary>
     void FaceTarget()
     {
         // Different method of rotation since enemies use NavMesh while player uses input.
@@ -312,7 +414,14 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    // Checks if the enemy can see the player
+    /// <summary>
+    /// Checks if the enemy can see the player.
+    /// </summary>
+    /// <param name="checkingObject">Enemy's transform.</param>
+    /// <param name="target">Target's transform.</param>
+    /// <param name="viewAngle">Refers to the angle of enemy's FOV.</param>
+    /// <param name="radius">Refers to the radius of enemy's FOV.</param>
+    /// <returns></returns>
     public bool inFOV(Transform checkingObject, Transform target, float viewAngle, float radius)
     {
         Vector3 directionBetween = (target.position - checkingObject.position).normalized;
@@ -340,11 +449,18 @@ public class EnemyController : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Draws visual mesh of enemy FOV.
+    /// </summary>
     void DrawFOV()
     {
+        // FOV full angle, from left peripheral to right peripheral.
         float viewAngle = FOVAngleMax * 2;
+        // Number of triangles to draw, based on mesh resolution.
         int rayCount = Mathf.RoundToInt(viewAngle * meshResolution);
+        // Angle of each triangle.
         float rayAngleSize = viewAngle / rayCount;
+
         List<Vector3> viewPoints = new List<Vector3>();
 
         for (int i = 0; i <= rayCount; ++i)
@@ -371,6 +487,7 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+        // Draw mesh based on calculations.
         viewMesh.Clear();
         viewMesh.vertices = vertices;
         viewMesh.triangles = triangles;
@@ -416,7 +533,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // Draws Scene gizmos for AI detecting player
-    public void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         // Displays viewing radius in Unity editor
         Gizmos.color = Color.yellow;
@@ -433,11 +550,8 @@ public class EnemyController : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, transform.forward * viewRadiusMax);
 
-        // Displays direction from player to enemy in respect to player
-        if (!isInFOV)
-            Gizmos.color = Color.red;
-        else
-            Gizmos.color = Color.green;
+        // Displays direction from target to enemy
+        Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, (playerUI.position - transform.position).normalized * viewRadiusMax);
     }
 }

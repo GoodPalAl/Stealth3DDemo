@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * Al A.
+ * Summer 2020 (c)
+ */
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class BushNoise : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class BushNoise : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        // If something touches the bush, make a noise.
         if (triggerSound != null)
             AS.PlayOneShot(triggerSound, 5f);
         Debug.Log("bush noises");

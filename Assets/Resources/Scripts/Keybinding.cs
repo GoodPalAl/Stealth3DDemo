@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 // NEW
 // Scriptable Object
@@ -18,9 +16,14 @@ public class Keybinding : ScriptableObject
         right = KeyCode.D;
         pause = KeyCode.Space;
     }
-    public KeyCode GetKey(string key)
+    /// <summary>
+    /// Fetches KeyCode from saved keybinds.
+    /// </summary>
+    /// <param name="command">Command of the key being fetched.</param>
+    /// <returns>KeyCode of given command.</returns>
+    public KeyCode GetKey(string command)
     {
-        switch (key)
+        switch (command)
         {
             case "Pause":
                 return pause;
@@ -60,7 +63,8 @@ public class Keybinding : ScriptableObject
                 break;
 
             default:
-                Debug.Log("???");
+                Debug.Log("ERROR: Attempting to set a key to an unknown command." 
+                    + " \"" + command + "\" -> " + newkey.ToString());
                 break;
         }
     }
