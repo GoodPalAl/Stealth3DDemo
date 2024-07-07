@@ -3,6 +3,7 @@
 /// <summary>
 /// Triggers when player reaches the goal.
 /// </summary>
+[RequireComponent(typeof(BoxCollider))]
 public class GoalTrigger : MonoBehaviour
 {
     // COMPONENTS
@@ -13,11 +14,13 @@ public class GoalTrigger : MonoBehaviour
     /// <summary>
     /// Collider of the goal barrier.
     /// </summary>
-    public Collider barrier;
+    BoxCollider barrier;
 
     private void Start()
     {
         player = PlayerManager.instance.player.transform;
+        barrier = GetComponent<BoxCollider>();
+        barrier.isTrigger = true;
     }
 
     private void OnTriggerEnter()
