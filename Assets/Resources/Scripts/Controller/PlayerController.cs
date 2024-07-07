@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/*
+ * Al A.
+ * Summer 2020 / Summer 2024 (c)
+ * This script is in charge of controlling the player's model.
+ * Movement, 
+ * 
+ */
+
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
