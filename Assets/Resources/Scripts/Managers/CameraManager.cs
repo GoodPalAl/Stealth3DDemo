@@ -1,3 +1,8 @@
+/*
+ * Al A.
+ * July 7 2024 (c)
+ */
+
 using Cinemachine;
 using UnityEngine;
 

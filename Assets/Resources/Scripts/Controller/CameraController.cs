@@ -1,4 +1,9 @@
-﻿using Cinemachine;
+﻿/*
+ * Al A.
+ * Summer 2020 (c)
+ */
+
+using Cinemachine;
 using UnityEngine;
 
 /// <summary>
@@ -16,15 +21,22 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         camBrain = CameraManager.instance.MainCam.GetComponent<CinemachineBrain>();
+        // Disable camera before game starts.
         camBrain.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        CameraControl();
+    }
+
+    void CameraControl()
+    {
+        // Fetch game start status.
         gameStartStatusThisFrame = GameManager.instance.GetStartStatus();
 
-        // Toggle camera control only if the game status has changed from the previous frame.
+        // Update camera control only if the game start status has changed from the previous frame.
         // Prevents code from reassigning the camera enabling every frame.
         if (gameStartStatusLastFrame != gameStartStatusThisFrame)
         {
