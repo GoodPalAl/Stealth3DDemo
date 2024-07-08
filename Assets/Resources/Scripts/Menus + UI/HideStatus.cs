@@ -29,9 +29,9 @@ public class HideStatus : MonoBehaviour
     private void Update()
     {
         // If the player moves, change the text
-        if (GameManager.instance.getStartStatus())
+        if (GameManager.instance.GetStartStatus())
         {
-            if (!GameManager.instance.getWinStatus())
+            if (!GameManager.instance.GetWinStatus())
             {
                 if (PlayerManager.instance.getHideStatus())
                 {
@@ -53,8 +53,8 @@ public class HideStatus : MonoBehaviour
                     hideStatus.SetActive(true);
                 }
             }
-            if (GameManager.instance.getWinStatus() 
-                || GameManager.instance.getLossStatus())
+            if (GameManager.instance.GetWinStatus() 
+                || GameManager.instance.GetLossStatus())
             {
                 hideStatus.SetActive(false);
             }

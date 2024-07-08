@@ -249,7 +249,7 @@ public class EnemyController : MonoBehaviour
                 FaceTarget();
 
                 // Update player losing status
-                GameManager.instance.setLossStatus(true);
+                GameManager.instance.SetLossStatus(true);
             }
 
             // Player must escape viewing radius to become undetected again

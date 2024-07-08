@@ -20,8 +20,8 @@ public class StartMenu : MonoBehaviour
         if (menuStart != null)
         {
             menuStart.SetActive(true);
-            GameManager.instance.setPauseStatus(false);
-            GameManager.instance.setStartStatus(false);
+            GameManager.instance.SetPauseStatus(false);
+            GameManager.instance.SetStartStatus(false);
             AS = GetComponent<AudioSource>();
             AS.Play();
             Time.timeScale = 0f;
@@ -48,6 +48,6 @@ public class StartMenu : MonoBehaviour
         menuStart.SetActive(false);
         Time.timeScale = 1f;
         Debug.Log("Starting Game...");
-        GameManager.instance.setStartStatus(true);
+        GameManager.instance.SetStartStatus(true);
     }
 }

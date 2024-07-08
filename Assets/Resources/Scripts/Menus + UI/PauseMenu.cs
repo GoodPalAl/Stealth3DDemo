@@ -36,9 +36,9 @@ public class PauseMenu : MonoBehaviour
         //    && GameManager.instance.getStartStatus())
         // NEW: see KeybindManager
         if (KeybindManager.instance.KeyDown("Pause") 
-            && GameManager.instance.getStartStatus())
+            && GameManager.instance.GetStartStatus())
         {
-            if (!GameManager.instance.getPauseStatus())
+            if (!GameManager.instance.GetPauseStatus())
                 PauseGame();
         }
     }
@@ -53,7 +53,7 @@ public class PauseMenu : MonoBehaviour
         //*/
         Time.timeScale = 0f;
         Debug.Log("Pausing Game..." + Time.timeScale);
-        GameManager.instance.setPauseStatus(true);
+        GameManager.instance.SetPauseStatus(true);
     }
 
     public void ContinueGame()
@@ -66,7 +66,7 @@ public class PauseMenu : MonoBehaviour
         //*/
         Time.timeScale = 1f;
         Debug.Log("Resuming Game..." + Time.timeScale);
-        GameManager.instance.setPauseStatus(false);
+        GameManager.instance.SetPauseStatus(false);
     }
 
     public void RestartGame()

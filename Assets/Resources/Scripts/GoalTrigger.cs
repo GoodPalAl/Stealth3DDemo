@@ -27,12 +27,12 @@ public class GoalTrigger : MonoBehaviour
     {
         // If player is hidden from enemies and player has not lost.
         if (PlayerManager.instance.getHideStatus() 
-            && !GameManager.instance.getLossStatus())
+            && !GameManager.instance.GetLossStatus())
         {
             // Goal Barrier will ignore collision with player collider.
             Physics.IgnoreCollision(player.GetComponent<Collider>(), barrier);
             // Tell the game manager that the player has won!
-            GameManager.instance.setWinStatus(true);
+            GameManager.instance.SetWinStatus(true);
         }
         else
         {

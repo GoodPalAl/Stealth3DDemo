@@ -23,9 +23,9 @@ public class EndMenu : MonoBehaviour
     private void Update()
     {
         // If the player moves, change the text
-        if (GameManager.instance.getStartStatus())
+        if (GameManager.instance.GetStartStatus())
         {
-            if (GameManager.instance.getWinStatus())
+            if (GameManager.instance.GetWinStatus())
             {
                 menuEnd.SetActive(true);
                 gameWinText.SetActive(true);
@@ -33,7 +33,7 @@ public class EndMenu : MonoBehaviour
                 AS.Play();
 
             }
-            else if (GameManager.instance.getLossStatus())
+            else if (GameManager.instance.GetLossStatus())
             {
                 Time.timeScale = 0f;
                 menuEnd.SetActive(true);
@@ -45,20 +45,20 @@ public class EndMenu : MonoBehaviour
 
     public void RestartGame()
     {
-        GameManager.instance.setStartStatus(false);
-        GameManager.instance.setPauseStatus(false);
-        GameManager.instance.setWinStatus(false);
-        GameManager.instance.setLossStatus(false);
+        GameManager.instance.SetStartStatus(false);
+        GameManager.instance.SetPauseStatus(false);
+        GameManager.instance.SetWinStatus(false);
+        GameManager.instance.SetLossStatus(false);
         Debug.Log("Restarting Level...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void QuitGame()
     {
-        GameManager.instance.setStartStatus(false);
-        GameManager.instance.setPauseStatus(false);
-        GameManager.instance.setWinStatus(false);
-        GameManager.instance.setLossStatus(false);
+        GameManager.instance.SetStartStatus(false);
+        GameManager.instance.SetPauseStatus(false);
+        GameManager.instance.SetWinStatus(false);
+        GameManager.instance.SetLossStatus(false);
         Debug.Log("Restarting Level...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        
         /*
         if (instance == null)
             instance = this;
@@ -30,38 +31,41 @@ public class GameManager : MonoBehaviour
     #endregion
 
     // COMPONENTS
-    /// <summary>
-    /// References Main Camera of the game.
-    /// </summary>
-    public GameObject mainCamera;
-
     // VARIABLES
     /// <summary>
     /// Keeps track of if the game has started or not.
     /// </summary>
-    static bool hasStarted = false;
+    static bool HasStarted = false;
     /// <summary>
     /// Keeps track of if the game is paused or not.
     /// </summary>
-    static bool isPaused = false;
+    static bool IsPaused = false;
     /// <summary>
     /// Keeps track of if the player has won or not.
     /// </summary>
-    static bool hasWon = false;
+    static bool HasWon = false;
     /// <summary>
     /// Keeps track of if the player has lost or not.
     /// </summary>
-    static bool hasLost = false;
+    static bool HasLost = false;
 
     // FUNCTIONS
-    public bool getStartStatus() => hasStarted; 
-    public void setStartStatus(bool newStatus) => hasStarted = newStatus;
+    /// <summary>
+    /// Fetches if level has started.
+    /// </summary>
+    /// <returns>True if level has started, false if it has not.</returns>
+    public bool GetStartStatus() => HasStarted; 
+    /// <summary>
+    /// Sets if level has started or not. True typically after the "start menu" button is pressed.
+    /// </summary>
+    /// <param name="newStatus"></param>
+    public void SetStartStatus(bool newStatus) => HasStarted = newStatus;
 
-    public bool getPauseStatus() => isPaused; 
-    public void setPauseStatus(bool newStatus) => isPaused = newStatus;
+    public bool GetPauseStatus() => IsPaused; 
+    public void SetPauseStatus(bool newStatus) => IsPaused = newStatus;
 
-    public bool getWinStatus() => hasWon; 
-    public void setWinStatus(bool newStatus) => hasWon = newStatus; 
-    public bool getLossStatus() => hasLost;
-    public void setLossStatus(bool newStatus) => hasLost = newStatus;
+    public bool GetWinStatus() => HasWon; 
+    public void SetWinStatus(bool newStatus) => HasWon = newStatus; 
+    public bool GetLossStatus() => HasLost;
+    public void SetLossStatus(bool newStatus) => HasLost = newStatus;
 }

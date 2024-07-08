@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Speed in which the player's model turns.
     /// </summary>
-    float turnSmoothTime = 0.1f;
+    readonly float turnSmoothTime = 0.1f;
     /// <summary>
     /// Current speed of the player's model turning. 
     /// </summary>
@@ -38,14 +38,14 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         // Fetch camera from GameManager.
-        cam = GameManager.instance.mainCamera.transform;
+        cam = CameraManager.instance.MainCam.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Only allow player movement if the player hasn't lost.
-        if (!GameManager.instance.getLossStatus())
+        if (!GameManager.instance.GetLossStatus())
         {
             PlayerMovement();
         }
