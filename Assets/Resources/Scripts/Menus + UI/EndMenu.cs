@@ -13,11 +13,14 @@ public class EndMenu : MonoBehaviour
     GameObject gameLostText = null;
 
     AudioSource AS;
+    // FIXME: Trigger animation how?
+    //Animator Ani;
 
     private void Start()
     {
         menuEnd.SetActive(false);
         AS = GetComponent<AudioSource>();
+        //Ani = GetComponent<Animator>();
     }
 
     private void Update()
@@ -27,11 +30,13 @@ public class EndMenu : MonoBehaviour
         {
             if (GameManager.instance.GetWinStatus())
             {
+                //Ani.ResetTrigger("Level Complete");
                 menuEnd.SetActive(true);
                 gameWinText.SetActive(true);
                 gameLostText.SetActive(false);
-                AS.Play();
-
+                //Ani.SetTrigger("Level Complete");
+                // FIXME: play win music
+                //AS.Play();
             }
             else if (GameManager.instance.GetLossStatus())
             {
@@ -45,21 +50,24 @@ public class EndMenu : MonoBehaviour
 
     public void RestartGame()
     {
-        GameManager.instance.SetStartStatus(false);
-        GameManager.instance.SetPauseStatus(false);
-        GameManager.instance.SetWinStatus(false);
-        GameManager.instance.SetLossStatus(false);
+        ResetGame();
         Debug.Log("Restarting Level...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void QuitGame()
     {
+        ResetGame();
+        Debug.Log("Quitting Game...");
+        SceneManager.LoadScene(0);
+    }
+
+    private void ResetGame()
+    {
         GameManager.instance.SetStartStatus(false);
         GameManager.instance.SetPauseStatus(false);
         GameManager.instance.SetWinStatus(false);
         GameManager.instance.SetLossStatus(false);
-        Debug.Log("Restarting Level...");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        //Ani.ResetTrigger("Level Complete");
     }
 }
